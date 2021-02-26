@@ -1,6 +1,5 @@
 import scrapy
-import re
-from kafka import KafkaProducer
+import Producer
 
 class PnjSpider(scrapy.Spider):
     name = 'pnj'
@@ -10,8 +9,11 @@ class PnjSpider(scrapy.Spider):
         'LOG_LEVEL':'INFO'
     }
     def parse(self, resp):
-        for table in resp.css('table'):
-            self.logger.info({'content': table.css('td::text').getall()})
+        rows = resp.css('table>tbody>tr')
+        pnjRow = rows[1].css('td::text').getall()
+        scjRow = rows[2].css('td::text').getall()
+        Producer.notify("pnj", b'price', bytes(pnjRow[1], encoding="raw_unicode_escape"))
+
         
         
         pass
