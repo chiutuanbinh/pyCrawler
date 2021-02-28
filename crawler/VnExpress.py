@@ -1,6 +1,5 @@
 import scrapy
 import re
-from scrapy.crawler import CrawlerProcess
 
 
 class VnexpressSpider(scrapy.Spider):
@@ -13,7 +12,15 @@ class VnexpressSpider(scrapy.Spider):
 
     def parse(self, resp):
         for article in resp.css('article.fck_detail'):
-            self.logger.info({'content': article.css('p::text').getall()})
+            datas = article.css('p::text').getall()
+            if len(datas) == 0 :
+                continue
+            # self.logger.info({'content': datas})
+        for meta in resp.css('meta'):
+            # if meta.css('meta::attr(itemprop)').get() == 'articleSection':
+            #     self.logger.info(meta.css('meta::attr(content)').get())
+            if meta.css('meta::attr(name)').get() == 'keywords':
+                self.logger.info(meta.css('meta::attr(content)').get())
         for next_page in resp.css('a'):
             if len(next_page.css('a::attr(href)').getall()) > 0:
                 href = next_page.css('a::attr(href)').get()

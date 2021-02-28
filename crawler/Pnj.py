@@ -1,5 +1,5 @@
 import scrapy
-import Producer
+from xkafka import Producer
 import time
 import goldprice_pb2
 
