@@ -19,42 +19,42 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='goldprice.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\x0fgoldprice.proto\"H\n\tgoldprice\x12\r\n\x05gType\x18\x01 \x01(\t\x12\x0b\n\x03\x62uy\x18\x02 \x01(\x05\x12\x0c\n\x04sell\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\x03\x62\x06proto3')
+  serialized_pb=_b('\n\x0fgoldprice.proto\"I\n\nPGoldprice\x12\r\n\x05gType\x18\x01 \x01(\t\x12\x0b\n\x03\x62uy\x18\x02 \x01(\x05\x12\x0c\n\x04sell\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\x03\x42\x1c\n\x1ame.binhct.middleware.protob\x06proto3')
 )
 
 
 
 
-_GOLDPRICE = _descriptor.Descriptor(
-  name='goldprice',
-  full_name='goldprice',
+_PGOLDPRICE = _descriptor.Descriptor(
+  name='PGoldprice',
+  full_name='PGoldprice',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='gType', full_name='goldprice.gType', index=0,
+      name='gType', full_name='PGoldprice.gType', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='buy', full_name='goldprice.buy', index=1,
+      name='buy', full_name='PGoldprice.buy', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='sell', full_name='goldprice.sell', index=2,
+      name='sell', full_name='PGoldprice.sell', index=2,
       number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='timestamp', full_name='goldprice.timestamp', index=3,
+      name='timestamp', full_name='PGoldprice.timestamp', index=3,
       number=4, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -73,18 +73,20 @@ _GOLDPRICE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=19,
-  serialized_end=91,
+  serialized_end=92,
 )
 
-DESCRIPTOR.message_types_by_name['goldprice'] = _GOLDPRICE
+DESCRIPTOR.message_types_by_name['PGoldprice'] = _PGOLDPRICE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-goldprice = _reflection.GeneratedProtocolMessageType('goldprice', (_message.Message,), dict(
-  DESCRIPTOR = _GOLDPRICE,
+PGoldprice = _reflection.GeneratedProtocolMessageType('PGoldprice', (_message.Message,), dict(
+  DESCRIPTOR = _PGOLDPRICE,
   __module__ = 'goldprice_pb2'
-  # @@protoc_insertion_point(class_scope:goldprice)
+  # @@protoc_insertion_point(class_scope:PGoldprice)
   ))
-_sym_db.RegisterMessage(goldprice)
+_sym_db.RegisterMessage(PGoldprice)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\032me.binhct.middleware.proto'))
 # @@protoc_insertion_point(module_scope)
