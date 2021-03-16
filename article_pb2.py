@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='article.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\rarticle.proto\"\xaa\x01\n\x08PArticle\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0boriKeywords\x18\x02 \x03(\t\x12\x13\n\x0boriCategory\x18\x03 \x01(\t\x12\x0e\n\x06oriUrl\x18\x04 \x01(\t\x12\x11\n\tpublisher\x18\x06 \x01(\t\x12\x11\n\ttimestamp\x18\x07 \x01(\x03\x12\x11\n\tparagraph\x18\x08 \x03(\t\x12\x10\n\x08mediaUrl\x18\t \x03(\t\x12\n\n\x02id\x18\n \x01(\tB\x1c\n\x1ame.binhct.middleware.protob\x06proto3')
+  serialized_pb=_b('\n\rarticle.proto\"\xbf\x01\n\x08PArticle\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0boriKeywords\x18\x02 \x03(\t\x12\x13\n\x0boriCategory\x18\x03 \x01(\t\x12\x0e\n\x06oriUrl\x18\x04 \x01(\t\x12\x11\n\tpublisher\x18\x06 \x01(\t\x12\x11\n\ttimestamp\x18\x07 \x01(\x03\x12\x11\n\tparagraph\x18\x08 \x03(\t\x12\x10\n\x08mediaUrl\x18\t \x03(\t\x12\n\n\x02id\x18\n \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x0b \x01(\tB\x1c\n\x1ame.binhct.middleware.protob\x06proto3')
 )
 
 
@@ -95,6 +95,13 @@ _PARTICLE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='description', full_name='PArticle.description', index=9,
+      number=11, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -108,7 +115,7 @@ _PARTICLE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=18,
-  serialized_end=188,
+  serialized_end=209,
 )
 
 DESCRIPTOR.message_types_by_name['PArticle'] = _PARTICLE

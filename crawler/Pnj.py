@@ -28,10 +28,10 @@ class PnjSpider(scrapy.Spider):
             Producer.notify("gold", pPrice.gType.encode(), pPrice.SerializeToString())
         td = resp.css('#world-gold-price')
         print(td)
-        buy = td.css('tr>td>strong>font').getall()[0]
-        sell = td.css('tr>td>strong>font').getall()[1]
-        self.logger.info(buy)
-        self.logger.info(sell)
+        # buy = td.css('tr>td>strong>font').getall()[0]
+        # sell = td.css('tr>td>strong>font').getall()[1]
+        # self.logger.info(buy)
+        # self.logger.info(sell)
 
         # time.sleep(10)
         

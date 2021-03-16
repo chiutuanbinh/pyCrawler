@@ -21,26 +21,32 @@ class VnexpressSpider(scrapy.Spider):
             datas = article.css('p::text').getall()
             datas = [d.replace('\"', '').strip() for d in datas if d != '\n']
             if len(datas) != 0 :
-                particle = article_pb2.PArticle()
-                particle.paragraph.extend(datas)
+                pArticle = article_pb2.PArticle()
+                pArticle.paragraph.extend(datas)
+                desc = resp.css('p.description::text').get()
+                if desc is not None:
+                    pArticle.description = desc
                 for meta in resp.css('meta'):   
                     if meta.css('meta::attr(itemprop)').get() == 'articleSection':
                         # self.logger.info(meta.css('meta::attr(content)').get())
-                        particle.oriCategory = meta.css('meta::attr(content)').get().strip()
+                        pArticle.oriCategory = meta.css('meta::attr(content)').get().strip()
                     elif meta.css('meta::attr(name)').get() == 'keywords':
-                        particle.oriKeywords.extend([x.strip() for x in meta.css('meta::attr(content)').get().split(',')])
+                        pArticle.oriKeywords.extend([x.strip() for x in meta.css('meta::attr(content)').get().split(',')])
                         # self.logger.info(meta.css('meta::attr(content)').get())
                     elif meta.css('meta::attr(name)').get() == 'pubdate':
                         structTime = time.strptime(meta.css('meta::attr(content)').get(), self.dtFormat)
-                        particle.timestamp = int(time.mktime(structTime) * 1000)
+                        pArticle.timestamp = int(time.mktime(structTime) * 1000)
                     pass
-                particle.oriUrl = resp.request.url
-                particle.title = resp.css('title::text').get().replace('- VnExpress', '').strip()
-                particle.publisher = self.name
-                particle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
+                pArticle.oriUrl = resp.request.url
+                pArticle.title = resp.css('title::text').get().replace('- VnExpress', '').strip()
+                pArticle.publisher = self.name
+                pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
+                # for img in resp.css('img'):
+                #     if img.css('img::attr(itemprop)').get() == 'contentUrl':
+                #         pArticle.mediaUrl.append(img.css('img::attr(data-src)').get())
                 
-                self.logger.info(particle)
-                Producer.notify('article', self.name.encode(), particle.SerializeToString())
+                self.logger.info(pArticle)
+                Producer.notify('article', self.name.encode(), pArticle.SerializeToString())
                 pass
 
             
