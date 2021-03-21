@@ -1,0 +1,1 @@
+invalid_links = ['javascript:;','javascript:void();', 'javascript:void(0);', 'javascript:void(0)','javascript:void','javascript:%20void(0);', 'javascript:history.back()','javascript:;;']

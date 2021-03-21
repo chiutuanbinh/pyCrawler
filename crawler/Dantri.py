@@ -1,13 +1,17 @@
-import scrapy
-import re
-import article_pb2
-from xkafka import Producer
 import hashlib
-import time
 import json
+import re
+import time
+
+import article_pb2
+import scrapy
+from xkafka import Producer
+
+from crawler.Base import ArticleSpider
+from crawler.common import invalid_links
 
 
-class DantriSpider(scrapy.Spider):
+class DantriSpider(ArticleSpider):
     name = 'dantri'
     start_urls = ['https://dantri.com.vn/xa-hoi/2-nguoi-tu-nan-20-nguoi-bi-thuong-tai-hoa-giang-xuong-tren-duong-di-le-20210316151826194.htm']
     allowed_domains = ['dantri.com.vn']
@@ -16,7 +20,7 @@ class DantriSpider(scrapy.Spider):
     }
     dtFormat='%Y-%m-%dT%H:%M:%S'
     visited = set()
-    def parse(self, resp):
+    def doParse(self, resp):
         if len(resp.css('div.dt-news__content').getall()) > 0 :
             article_body = resp.css('div.dt-news__content')
             datas = article_body.css('p::text').getall()
@@ -36,24 +40,14 @@ class DantriSpider(scrapy.Spider):
                         data = jdata.css('script::text').get().strip()
                         jata = json.loads(data)
                         if 'datePublished' in jata.keys():
-                            structTime = time.strptime(jata['datePublished'][:-3], self.dtFormat)
+                            # self.logger.info(jata['datePublished'])
+
+                            structTime = time.strptime(jata['datePublished'].split('.')[0], self.dtFormat)
                             ts = int(time.mktime(structTime) * 1000)
                             pArticle.timestamp = ts
                 pArticle.oriUrl = resp.request.url
                 pArticle.title = resp.css('title::text').get().replace('| Báo Dân trí','')
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
-                
-                self.logger.info(pArticle)
-        for next_page in resp.css('a'):
-            if len(next_page.css('a::attr(href)').getall()) > 0:
-                href = next_page.css('a::attr(href)').get()
-                if href in ['javascript:;','javascript:void();', 'javascript:void(0);', 'javascript:void(0)']:
-                    pass
-                elif re.search("(mailto|tel)", href) is not None:
-                    pass
-                else:
-                    if href in self.visited:
-                        continue
-                    self.visited.add(href)
-                    self.logger.info(href)
-                    yield resp.follow(href, self.parse)
+                pArticle.publisher = self.name
+                return pArticle
+        return None

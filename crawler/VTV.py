@@ -1,14 +1,18 @@
-import scrapy
-import re
-import article_pb2
-from xkafka import Producer
+from crawler.Base import ArticleSpider
 import hashlib
-import time
-import json
 import html
+import json
+import re
+import time
+
+import article_pb2
+import scrapy
+from xkafka import Producer
+
+from crawler.common import invalid_links
 
 
-class VTVSpider(scrapy.Spider):
+class VTVSpider(ArticleSpider):
     name = 'VTV'
     start_urls = ['https://vtv.vn/kinh-te/tu-ngay-1-7-tang-muc-chuan-tro-giup-xa-hoi-len-360000-dong-thang-20210317193546918.htm']
     allowed_domains = ['vtv.vn']
@@ -17,14 +21,14 @@ class VTVSpider(scrapy.Spider):
     }
     dtFormat='%Y-%m-%dT%H:%M:%S%Z:00'
     visited = set()
-    def parse(self, resp):
+    def doParse(self, resp):
         if len(resp.css('div#entry-body').getall()) > 0 :
             article_body = resp.css('div#entry-body')
             datas = article_body.css('p::text').getall()
             
             if len(datas) > 0:
                 datas = [d.replace('\xa0', ' ').strip() for d in datas]
-                self.logger.info(datas)
+                # self.logger.info(datas)
                 pArticle = article_pb2.PArticle()
                 pArticle.paragraph.extend(datas)
                 for meta in resp.css('meta'):
@@ -44,19 +48,7 @@ class VTVSpider(scrapy.Spider):
                             pArticle.timestamp = ts
                 pArticle.title = resp.css('title::text').get().replace('| VTV.VN','').strip()
                 pArticle.oriUrl = resp.request.url
+                pArticle.publisher = self.name
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
-                
-                self.logger.info(pArticle.description)
-        # for next_page in resp.css('a'):
-        #     if len(next_page.css('a::attr(href)').getall()) > 0:
-        #         href = next_page.css('a::attr(href)').get()
-        #         if href in ['javascript:;','javascript:void();', 'javascript:void(0);', 'javascript:void(0)']:
-        #             pass
-        #         elif re.search("(mailto|tel)", href) is not None:
-        #             pass
-        #         else:
-        #             if href in self.visited:
-        #                 continue
-        #             self.visited.add(href)
-        #             self.logger.info(href)
-        #             yield resp.follow(href, self.parse)
+                return pArticle
+        return None

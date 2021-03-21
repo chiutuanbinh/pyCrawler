@@ -1,3 +1,4 @@
+from crawler.Base import ArticleSpider
 import scrapy
 import re
 import article_pb2
@@ -5,9 +6,9 @@ from xkafka import Producer
 import hashlib
 import time
 import json
+from crawler.common import invalid_links
 
-
-class LaodongSpider(scrapy.Spider):
+class LaodongSpider(ArticleSpider):
     name = 'laodong'
     start_urls = ['https://laodong.vn/phap-luat/nguyen-chu-tich-ha-noi-nguyen-duc-chung-tiep-tuc-bi-khoi-to-890203.ldo']
     allowed_domains = ['laodong.vn']
@@ -16,14 +17,14 @@ class LaodongSpider(scrapy.Spider):
     }
     dtFormat='%Y-%m-%dT%H:%M:%S%Z:00'
     visited = set()
-    def parse(self, resp):
+    def doParse(self, resp):
         if len(resp.css('div.article-content').getall()) > 0 :
             article_body = resp.css('div.article-content')
             datas = article_body.css('p::text').getall()
             
             if len(datas) > 0:
                 datas = [d.replace('\xa0', ' ').strip() for d in datas]
-                self.logger.info(datas)
+                # self.logger.info(datas)
                 pArticle = article_pb2.PArticle()
                 pArticle.paragraph.extend(datas)
                 for meta in resp.css('meta'):
@@ -46,18 +47,6 @@ class LaodongSpider(scrapy.Spider):
                             pArticle.timestamp = ts
                 pArticle.oriUrl = resp.request.url
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
-                
-                self.logger.info(pArticle)
-        # for next_page in resp.css('a'):
-        #     if len(next_page.css('a::attr(href)').getall()) > 0:
-        #         href = next_page.css('a::attr(href)').get()
-        #         if href in ['javascript:;','javascript:void();', 'javascript:void(0);', 'javascript:void(0)']:
-        #             pass
-        #         elif re.search("(mailto|tel)", href) is not None:
-        #             pass
-        #         else:
-        #             if href in self.visited:
-        #                 continue
-        #             self.visited.add(href)
-        #             self.logger.info(href)
-        #             yield resp.follow(href, self.parse)
+                pArticle.publisher = self.name
+                return pArticle
+        return None

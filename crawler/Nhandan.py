@@ -1,3 +1,4 @@
+from crawler.Base import ArticleSpider
 import scrapy
 import re
 import article_pb2
@@ -5,9 +6,10 @@ from xkafka import Producer
 import hashlib
 import time
 import json
+from crawler.common import invalid_links
 
 
-class NhandanSpider(scrapy.Spider):
+class NhandanSpider(ArticleSpider):
     name = 'nhandan'
     start_urls = ['https://nhandan.com.vn/tin-tuc-su-kien/hoi-nghi-tong-ket-5-nam-hoat-dong-to-cong-tac-cua-thu-tuong-chinh-phu-638649/']
     allowed_domains = ['nhandan.com.vn']
@@ -16,7 +18,7 @@ class NhandanSpider(scrapy.Spider):
     }
     dtFormat='%m/%d/%Y %H:%M:%S'
     visited = set()
-    def parse(self, resp):
+    def doParse(self, resp):
         if len(resp.css('div.detail-content-body ').getall()) > 0 :
             article_body = resp.css('div.detail-content-body ')
             datas = article_body.css('p::text').getall()
@@ -40,18 +42,6 @@ class NhandanSpider(scrapy.Spider):
                 pArticle.oriUrl = resp.request.url
                 pArticle.title = resp.css('title::text').get().replace('| Báo Dân trí','')
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
-                
-                self.logger.info(pArticle)
-        for next_page in resp.css('a'):
-            if len(next_page.css('a::attr(href)').getall()) > 0:
-                href = next_page.css('a::attr(href)').get()
-                if href in ['javascript:;','javascript:void();', 'javascript:void(0);', 'javascript:void(0)']:
-                    pass
-                elif re.search("(mailto|tel)", href) is not None:
-                    pass
-                else:
-                    if href in self.visited:
-                        continue
-                    self.visited.add(href)
-                    self.logger.info(href)
-                    yield resp.follow(href, self.parse)
+                pArticle.publisher = self.name
+                return pArticle
+        return None
