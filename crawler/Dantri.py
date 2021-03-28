@@ -13,7 +13,7 @@ from crawler.common import invalid_links
 
 class DantriSpider(ArticleSpider):
     name = 'dantri'
-    start_urls = ['https://dantri.com.vn/xa-hoi/2-nguoi-tu-nan-20-nguoi-bi-thuong-tai-hoa-giang-xuong-tren-duong-di-le-20210316151826194.htm']
+    start_urls = ['https://dantri.com.vn']
     allowed_domains = ['dantri.com.vn']
     custom_settings = {
         'LOG_LEVEL':'INFO'
@@ -49,5 +49,12 @@ class DantriSpider(ArticleSpider):
                 pArticle.title = resp.css('title::text').get().replace('| Báo Dân trí','')
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
                 pArticle.publisher = self.name
+                media_list = []
+                for img in article_body.css('img'):
+                    media_url = img.css('img::attr(src)').get()
+                    if media_url is not None:
+                        media_list.append(media_url)
+                pArticle.mediaUrl.extend(media_list)
+                self.logger.info(media_list)
                 return pArticle
         return None

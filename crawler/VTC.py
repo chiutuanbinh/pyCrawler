@@ -11,7 +11,7 @@ from crawler.common import invalid_links
 
 class VTCSpider(ArticleSpider):
     name = 'VTC'
-    start_urls = ['https://vtc.vn/ong-nguyen-duc-chung-bi-khoi-to-them-toi-danh-ar601550.html']
+    start_urls = ['https://vtc.vn']
     allowed_domains = ['vtc.vn']
     custom_settings = {
         'LOG_LEVEL':'INFO'
@@ -47,5 +47,13 @@ class VTCSpider(ArticleSpider):
                 pArticle.oriUrl = resp.request.url
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
                 pArticle.publisher = self.name
+                imgs = article_body.css('img')
+                media_list = []
+                for img in imgs:
+                    media_url = img.css('img::attr(data-src)').get()
+                    if media_url is not None:
+                        media_list.append(media_url)
+                # self.logger.info(media_list)
+                pArticle.mediaUrl.extend(media_list)
                 return pArticle
         return None

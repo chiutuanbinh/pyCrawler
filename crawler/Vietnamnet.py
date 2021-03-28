@@ -42,5 +42,13 @@ class VietnamnetSpider(ArticleSpider):
                 pArticle.title = resp.css('title::text').get().replace('- VietNamNet', '').strip()
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
                 pArticle.publisher = self.name
+                imgs = article.css('img')
+                media_list = []
+                for img in imgs:
+                    media_url = img.css('img::attr(src)').get()
+                    if media_url is not None:
+                        media_list.append(media_url)
+                self.logger.info(media_list)
+                pArticle.mediaUrl.extend(media_list)
                 return pArticle
         return None

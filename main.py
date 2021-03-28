@@ -20,7 +20,7 @@ if __name__ == '__main__':
     process.crawl(LaodongSpider)
     process.crawl(VTVSpider)
     process.crawl(VTCSpider)
-    # process.crawl(PnjSpider)
+    process.crawl(PnjSpider)
     process.start()
     
     pass

@@ -11,7 +11,7 @@ from crawler.common import invalid_links
 
 class NhandanSpider(ArticleSpider):
     name = 'nhandan'
-    start_urls = ['https://nhandan.com.vn/tin-tuc-su-kien/hoi-nghi-tong-ket-5-nam-hoat-dong-to-cong-tac-cua-thu-tuong-chinh-phu-638649/']
+    start_urls = ['https://nhandan.com.vn']
     allowed_domains = ['nhandan.com.vn']
     custom_settings = {
         'LOG_LEVEL':'INFO'
@@ -19,8 +19,8 @@ class NhandanSpider(ArticleSpider):
     dtFormat='%m/%d/%Y %H:%M:%S'
     visited = set()
     def doParse(self, resp):
-        if len(resp.css('div.detail-content-body ').getall()) > 0 :
-            article_body = resp.css('div.detail-content-body ')
+        if len(resp.css('div.box-content-detail').getall()) > 0 :
+            article_body = resp.css('div.box-content-detail')
             datas = article_body.css('p::text').getall()
             
             if len(datas) > 0:
@@ -43,5 +43,15 @@ class NhandanSpider(ArticleSpider):
                 pArticle.title = resp.css('title::text').get().replace('| Báo Dân trí','')
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
                 pArticle.publisher = self.name
+                imgs = article_body.css('img')
+                media_list = []
+                for img in imgs:
+                    media_url = img.css('img::attr(src)').get()
+                    if media_url is not None:
+                        if 'nhandan.com.vn' not in media_url:
+                            media_url = 'https://nhandan.com.vn/' + media_url
+                        media_list.append(media_url)
+                # self.logger.info(pArticle)
+                pArticle.mediaUrl.extend(media_list)
                 return pArticle
         return None

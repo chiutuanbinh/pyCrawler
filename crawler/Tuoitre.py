@@ -11,7 +11,7 @@ from crawler.common import invalid_links
 
 class TuoitreSpider(ArticleSpider):
     name = 'tuoitre'
-    start_urls = ['https://tuoitre.vn/cuu-chu-tich-ha-noi-nguyen-duc-chung-bi-khoi-to-them-toi-danh-vu-che-pham-redoxy-3c-20210317195908077.htm']
+    start_urls = ['https://tuoitre.vn']
     allowed_domains = ['tuoitre.vn']
     custom_settings = {
         'LOG_LEVEL':'INFO'
@@ -42,6 +42,14 @@ class TuoitreSpider(ArticleSpider):
                 pArticle.title = resp.css('title::text').get().replace(' - Tuổi Trẻ Online','')
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
                 pArticle.publisher = self.name
+                imgs = article_body.css('img')
+                media_list = []
+                for img in imgs:
+                    media_url = img.css('img::attr(src)').get()
+                    if media_url is not None:
+                        media_list.append(media_url)
+                self.logger.info(media_list)
+                pArticle.mediaUrl.extend(media_list)
                 return pArticle
         return None
         

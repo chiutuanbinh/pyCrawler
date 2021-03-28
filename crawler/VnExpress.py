@@ -17,7 +17,6 @@ class VnexpressSpider(ArticleSpider):
 
     def doParse(self, resp):
         if len(resp.css('article.fck_detail').getall()) > 0 :    
-            
             article = resp.css('article.fck_detail')
             datas = article.css('p::text').getall()
             datas = [d.replace('\"', '').strip() for d in datas if d != '\n']
@@ -42,5 +41,14 @@ class VnexpressSpider(ArticleSpider):
                 pArticle.title = resp.css('title::text').get().replace('- VnExpress', '').strip()
                 pArticle.publisher = self.name
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
+
+                imgs = article.css('img')
+                media_list = []
+                for img in imgs:
+                    media_url = img.css('img::attr(data-src)').get()
+                    if media_url is not None:
+                        media_list.append(media_url)
+                # self.logger.info(media_list)
+                pArticle.mediaUrl.extend(media_list)
                 return pArticle
         return None

@@ -26,7 +26,7 @@ class ArticleSpider(scrapy.Spider):
         for next_page in resp.css('a'):
             if len(next_page.css('a::attr(href)').getall()) > 0:
                 href = next_page.css('a::attr(href)').get()
-                if href in invalid_links or 'javascript' in href or 'void' in href:
+                if href in invalid_links or 'javascript' in href or 'void' in href or 'jpg' in href or 'png' in href:
                     pass
                 elif re.search("(mailto|tel)", href) is not None:
                     pass

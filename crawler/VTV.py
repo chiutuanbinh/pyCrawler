@@ -14,7 +14,7 @@ from crawler.common import invalid_links
 
 class VTVSpider(ArticleSpider):
     name = 'VTV'
-    start_urls = ['https://vtv.vn/kinh-te/tu-ngay-1-7-tang-muc-chuan-tro-giup-xa-hoi-len-360000-dong-thang-20210317193546918.htm']
+    start_urls = ['https://vtv.vn']
     allowed_domains = ['vtv.vn']
     custom_settings = {
         'LOG_LEVEL':'INFO'
@@ -50,5 +50,13 @@ class VTVSpider(ArticleSpider):
                 pArticle.oriUrl = resp.request.url
                 pArticle.publisher = self.name
                 pArticle.id = hashlib.md5(resp.request.url.encode()).hexdigest()
+                imgs = article_body.css('img')
+                media_list = []
+                for img in imgs:
+                    media_url = img.css('img::attr(src)').get()
+                    if media_url is not None:
+                        media_list.append(media_url)
+                # self.logger.info(media_list)
+                pArticle.mediaUrl.extend(media_list)
                 return pArticle
         return None
