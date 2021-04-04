@@ -48,7 +48,6 @@ class TuoitreSpider(ArticleSpider):
                     media_url = img.css('img::attr(src)').get()
                     if media_url is not None:
                         media_list.append(media_url)
-                self.logger.info(media_list)
                 pArticle.mediaUrl.extend(media_list)
                 return pArticle
         return None

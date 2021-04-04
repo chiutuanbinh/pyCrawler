@@ -55,6 +55,5 @@ class DantriSpider(ArticleSpider):
                     if media_url is not None:
                         media_list.append(media_url)
                 pArticle.mediaUrl.extend(media_list)
-                self.logger.info(media_list)
                 return pArticle
         return None

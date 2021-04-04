@@ -15,7 +15,7 @@ class VietnamnetSpider(ArticleSpider):
     custom_settings = {
         'LOG_LEVEL':'INFO'
     }
-    dtFormat='%Y-%m-%dT%H:%M:%S%Z:00'
+    dtFormat='%d-%m-%YT%H:%M:%S%Z:00'
     visited = set()
     def doParse(self, resp):
         if len(resp.css('div#ArticleContent').getall()) > 0:
@@ -48,7 +48,6 @@ class VietnamnetSpider(ArticleSpider):
                     media_url = img.css('img::attr(src)').get()
                     if media_url is not None:
                         media_list.append(media_url)
-                self.logger.info(media_list)
                 pArticle.mediaUrl.extend(media_list)
                 return pArticle
         return None
